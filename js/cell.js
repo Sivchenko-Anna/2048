@@ -6,4 +6,15 @@ export class Cell {
     this.x = x;
     this.y = y;
   }
+
+  // устанавливаем связь ячейки и квадрата
+  setLinkSquare(square) {
+    square.setXY(this.x, this.y);
+    this.linkedSquare = square;
+  }
+
+  // проверяем ячейку на отсутствие квадрата
+  isEmpty() {
+    return !this.linkedSquare;
+  }
 }

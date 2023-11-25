@@ -6,4 +6,12 @@ export class Square {
     this.squareElement.textContent = this.number;
     cellElement.append(this.squareElement);
   }
+
+  // устанавливаем координаты квадрата
+  setXY(x, y) {
+    this.x = x;
+    this.y = y;
+    this.squareElement.style.setProperty("--x", x);
+    this.squareElement.style.setProperty("--y", y);
+  }
 }
