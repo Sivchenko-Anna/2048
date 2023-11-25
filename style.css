@@ -1,17 +1,25 @@
-body {
-  background-color: rgb(41, 70, 70);
+:root {
+  --cell-size: 20vmin;
+  --cell-gap: 2vmin;
+  --y: 1;
+  --x: 2;
+}
+
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(41, 70, 70);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  box-sizing: border-box;
 }
 
 .game-board {
-  --cell-size: 20vmin;
-  --cell-gap: 2vmin;
   position: relative;
   display: grid;
   grid-template-columns: repeat(4, var(--cell-size));
@@ -27,8 +35,6 @@ body {
 }
 
 .square {
-  --y: 1;
-  --x: 2;
   position: absolute;
   top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)));
   left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)));
