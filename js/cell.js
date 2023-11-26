@@ -22,4 +22,18 @@ export class Cell {
   isEmpty() {
     return !this.linkedSquare;
   }
+
+  // проверка возвожности перемещение квадрата на новую ячейку
+  canAcceptSquare(newSquare) {
+    return (
+      this.isEmpty() ||
+      (!this.hasSquareForMerge() && this.linkedSquare.value === newSquare.value)
+    );
+  }
+
+  // смена координат на новые и сохранение ссылки на merge
+  linkSquareForMerge(square) {
+    square.setXY(this.x, this.y);
+    square.linkedSquareForMerge = square;
+  }
 }

@@ -1,6 +1,5 @@
 import { Grid } from "./grid.js";
 import { Square } from "./square.js";
-import { slideSquaresInGroup } from "./move.js";
 
 const gameBoard = document.querySelector(".game-board");
 
@@ -50,7 +49,7 @@ function slideSquare(cellsGroup) {
 }
 
 // смещение квадратов в группе
-export function slideSquaresInGroup(group, promises) {
+function slideSquaresInGroup(group, promises) {
   for (let i = 1; i < group.length; i++) {
     if (group[i].isEmpty()) {
       continue;
@@ -61,7 +60,7 @@ export function slideSquaresInGroup(group, promises) {
     let targetCell;
     let j = i - 1;
 
-    while (j >= 0 && group[j].canAccept(cellWithSquare.linkedSquare)) {
+    while (j >= 0 && group[j].canAcceptSquare(cellWithSquare.linkedSquare)) {
       targetCell = group[j];
       j--;
     }
@@ -73,7 +72,7 @@ export function slideSquaresInGroup(group, promises) {
     if (targetCell.isEmpty()) {
       targetCell.setLinkSquare(cellWithSquare.linkedSquare);
     } else {
-      //
+      targetCell.linkSquareForMerge(cellWithSquare.linkedSquare);
     }
 
     cellWithTile.removeLinkSquare();
