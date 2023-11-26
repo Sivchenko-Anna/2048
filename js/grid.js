@@ -11,12 +11,25 @@ export class Grid {
         new Cell(cellElement, i % GRID_SIZE, Math.floor(i / GRID_SIZE))
       );
     }
+
+     this.cellsColumnGroup = this.groupCellsByColumn();
   }
 
-  // получаем свободную ячейку
+  //получение свободной ячейки
   getEmptyCell() {
     const emptyCells = this.cells.filter((cell) => cell.isEmpty());
     const randomIndex = Math.floor(Math.random() * emptyCells.length);
     return emptyCells[randomIndex];
+  }
+
+  //группировка ячеек по столбцам
+  groupCellsByColumn() {
+    return this.cells.reduce((columnGroups, cell) => {
+      const columnIndex = cell.x;
+      const columnCells = columnGroups[columnIndex] || [];
+      columnCells[cell.y] = cell;
+      columnGroups[columnIndex] = columnCells;
+      return columnGroups;
+    }, [])
   }
 }
