@@ -75,6 +75,6 @@ function slideSquaresInGroup(group, promises) {
       targetCell.linkSquareForMerge(cellWithSquare.linkedSquare);
     }
 
-    cellWithTile.removeLinkSquare();
+    cellWithSquare.removeLinkSquare();
   }
 }

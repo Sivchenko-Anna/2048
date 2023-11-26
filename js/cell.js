@@ -36,4 +36,9 @@ export class Cell {
     square.setXY(this.x, this.y);
     square.linkedSquareForMerge = square;
   }
+
+  // проверка возможности объединения квадратов
+  hasSquareForMerge() {
+    return !!this.linkedSquareForMerge;
+  }
 }
