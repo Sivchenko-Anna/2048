@@ -7,13 +7,18 @@ export class Cell {
     this.y = y;
   }
 
-  // устанавливаем связь ячейки и квадрата
+  // устанавление связи ячейки и квадрата
   setLinkSquare(square) {
     square.setXY(this.x, this.y);
     this.linkedSquare = square;
   }
 
-  // проверяем ячейку на отсутствие квадрата
+  // удаление связи ячейки и квадрата
+  removeLinkSquare() {
+    this.linkedSquare = null;
+  }
+
+  // проверка ячейки на отсутствие квадрата
   isEmpty() {
     return !this.linkedSquare;
   }

@@ -1,5 +1,6 @@
 import { Grid } from "./grid.js";
 import { Square } from "./square.js";
+import { slideSquaresInGroup } from "./move.js";
 
 const gameBoard = document.querySelector(".game-board");
 
@@ -9,12 +10,12 @@ grid.getEmptyCell().setLinkSquare(new Square(gameBoard));
 
 setHandleKeypressOnce();
 
-//подписываемся на нажатие клавиши
+// подписка на нажатие клавиши
 export function setHandleKeypressOnce() {
   window.addEventListener("keydown", handleKeypress, { once: true });
 }
 
-//обрабатываем нажатие клавиш
+// обработка нажатия клавиш
 function handleKeypress(event) {
   switch (event.key) {
     case "ArrowUp":
@@ -41,6 +42,40 @@ function moveUp() {
   slideSquare(grid.cellsColumnGroup);
 }
 
+// смещение группы ячеек
 function slideSquare(cellsGroup) {
-  console.log(cellsGroup);
+  cellsGroup.forEach((group) => {
+    slideSquaresInGroup(group);
+  });
+}
+
+// смещение квадратов в группе
+export function slideSquaresInGroup(group, promises) {
+  for (let i = 1; i < group.length; i++) {
+    if (group[i].isEmpty()) {
+      continue;
+    }
+
+    const cellWithSquare = group[i];
+
+    let targetCell;
+    let j = i - 1;
+
+    while (j >= 0 && group[j].canAccept(cellWithSquare.linkedSquare)) {
+      targetCell = group[j];
+      j--;
+    }
+
+    if (!targetCell) {
+      continue;
+    }
+
+    if (targetCell.isEmpty()) {
+      targetCell.setLinkSquare(cellWithSquare.linkedSquare);
+    } else {
+      //
+    }
+
+    cellWithTile.removeLinkSquare();
+  }
 }
