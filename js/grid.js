@@ -16,6 +16,10 @@ export class Grid {
     this.cellsColumnGroupRevers = this.cellsColumnGroup.map((column) =>
       [...column].reverse()
     );
+    this.cellsRowGroup = this.groupCellsByRow();
+    this.cellsRowGroupRevers = this.cellsRowGroup.map((row) =>
+      [...row].reverse()
+    );
   }
 
   //получение свободной ячейки
@@ -33,6 +37,17 @@ export class Grid {
       columnCells[cell.y] = cell;
       columnGroups[columnIndex] = columnCells;
       return columnGroups;
+    }, []);
+  }
+
+  //группировка ячеек по рядам
+  groupCellsByRow() {
+    return this.cells.reduce((rowGroups, cell) => {
+      const columnIndex = cell.y;
+      const columnCells = rowGroups[columnIndex] || [];
+      columnCells[cell.x] = cell;
+      rowGroups[columnIndex] = columnCells;
+      return rowGroups;
     }, []);
   }
 }

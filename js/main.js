@@ -45,6 +45,14 @@ function moveDown() {
   slideSquare(grid.cellsColumnGroupRevers);
 }
 
+function moveRight() {
+  slideSquare(grid.cellsRowGroupRevers);
+}
+
+function moveLeft() {
+  slideSquare(grid.cellsRowGroup);
+}
+
 // смещение и объединение группы ячеек
 function slideSquare(cellsGroup) {
   cellsGroup.forEach((group) => {
