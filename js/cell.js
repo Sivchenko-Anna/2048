@@ -32,13 +32,27 @@ export class Cell {
   }
 
   // смена координат на новые и сохранение ссылки на merge
-  linkSquareForMerge(square) {
+  setLinkSquareForMerge(square) {
     square.setXY(this.x, this.y);
-    square.linkedSquareForMerge = square;
+    this.linkedSquareForMerge = square;
+  }
+
+  // удаление ссылки на merge
+  removeLinkSquareForMerge() {
+    this.linkedSquareForMerge = null;
   }
 
   // проверка возможности объединения квадратов
   hasSquareForMerge() {
     return !!this.linkedSquareForMerge;
+  }
+
+  // объединение квадратов с одинаковым значением
+  mergeSquares() {
+    this.linkedSquare.setValue(
+      this.linkedSquare.value + this.linkedSquareForMerge.value
+    );
+    this.linkedSquareForMerge.removeFromDOM();
+    this.removeLinkSquareForMerge();
   }
 }

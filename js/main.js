@@ -41,15 +41,17 @@ function moveUp() {
   slideSquare(grid.cellsColumnGroup);
 }
 
-// смещение группы ячеек
+// смещение и объединение группы ячеек
 function slideSquare(cellsGroup) {
   cellsGroup.forEach((group) => {
     slideSquaresInGroup(group);
   });
+
+  grid.cells.forEach(cell => {cell.hasSquareForMerge() && cell.mergeSquares()})
 }
 
 // смещение квадратов в группе
-function slideSquaresInGroup(group, promises) {
+function slideSquaresInGroup(group) {
   for (let i = 1; i < group.length; i++) {
     if (group[i].isEmpty()) {
       continue;
@@ -72,7 +74,7 @@ function slideSquaresInGroup(group, promises) {
     if (targetCell.isEmpty()) {
       targetCell.setLinkSquare(cellWithSquare.linkedSquare);
     } else {
-      targetCell.linkSquareForMerge(cellWithSquare.linkedSquare);
+      targetCell.setLinkSquareForMerge(cellWithSquare.linkedSquare);
     }
 
     cellWithSquare.removeLinkSquare();

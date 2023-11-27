@@ -6,7 +6,7 @@ export class Square {
     cellElement.append(this.squareElement);
   }
 
-  // устанавливаем координаты квадрата
+  // установка координат квадрата
   setXY(x, y) {
     this.x = x;
     this.y = y;
@@ -14,15 +14,20 @@ export class Square {
     this.squareElement.style.setProperty("--y", y);
   }
 
-  //задаём квадрату цвет фона и текста
+  // задаём квадрату цвет фона и текста
   setValue(value) {
-    this.number = value;
-    this.squareElement.textContent = this.number;
+    this.value = value;
+    this.squareElement.textContent = this.value;
     const bgLightness = 100 - Math.log2(value) * 9; // 2 -> 100-1*9 = 91; 2048 -> 100-11*9 = 1
     this.squareElement.style.setProperty("--bg-lightness", `${bgLightness}%`);
     this.squareElement.style.setProperty(
       "--text-lightness",
       `${bgLightness < 50 ? 90 : 10}%`
     );
+  }
+
+  // удаление квадрата из DOM
+  removeFromDOM() {
+    this.squareElement.remove();
   }
 }
