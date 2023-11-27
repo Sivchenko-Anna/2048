@@ -34,6 +34,10 @@ function handleKeypress(event) {
       setHandleKeypressOnce();
       return;
   }
+
+  const newSquare = new Square(gameBoard);
+  grid.getEmptyCell().setLinkSquare(newSquare);
+
   setHandleKeypressOnce();
 }
 
