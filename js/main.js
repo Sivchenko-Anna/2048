@@ -1,5 +1,6 @@
 import { Grid } from "./grid.js";
 import { Square } from "./square.js";
+import { slideSquaresInGroup, canMove } from "./move.js";
 
 const gameBoard = document.querySelector(".game-board");
 
@@ -7,11 +8,58 @@ const grid = new Grid(gameBoard);
 grid.getEmptyCell().setLinkSquare(new Square(gameBoard));
 grid.getEmptyCell().setLinkSquare(new Square(gameBoard));
 
-setHandleKeypressOnce();
-
 // подписка на нажатие клавиши
 export function setHandleKeypressOnce() {
   window.addEventListener("keydown", handleKeypress, { once: true });
+}
+
+setHandleKeypressOnce();
+
+function canMoveUp() {
+  return canMove(grid.cellsColumnGroup);
+}
+
+function canMoveDown() {
+  return canMove(grid.cellsColumnGroupRevers);
+}
+
+function canMoveRight() {
+  return canMove(grid.cellsRowGroupRevers);
+}
+
+function canMoveLeft() {
+  return canMove(grid.cellsRowGroup);
+}
+
+// смещение и объединение группы ячеек
+async function slideSquare(cellsGroup) {
+  const promises = [];
+
+  cellsGroup.forEach((group) => {
+    slideSquaresInGroup(group, promises);
+  });
+
+  await Promise.all(promises);
+
+  grid.cells.forEach((cell) => {
+    cell.hasSquareForMerge() && cell.mergeSquares();
+  });
+}
+
+async function moveUp() {
+  await slideSquare(grid.cellsColumnGroup);
+}
+
+async function moveDown() {
+  await slideSquare(grid.cellsColumnGroupRevers);
+}
+
+async function moveRight() {
+  await slideSquare(grid.cellsRowGroupRevers);
+}
+
+async function moveLeft() {
+  await slideSquare(grid.cellsRowGroup);
 }
 
 // обработка нажатия клавиш
@@ -61,102 +109,4 @@ async function handleKeypress(event) {
   }
 
   setHandleKeypressOnce();
-}
-
-// смещение квадратов в группе
-function slideSquaresInGroup(group, promises) {
-  for (let i = 1; i < group.length; i++) {
-    if (group[i].isEmpty()) {
-      continue;
-    }
-
-    const cellWithSquare = group[i];
-
-    let targetCell;
-    let j = i - 1;
-
-    while (j >= 0 && group[j].canAcceptSquare(cellWithSquare.linkedSquare)) {
-      targetCell = group[j];
-      j--;
-    }
-
-    if (!targetCell) {
-      continue;
-    }
-
-    promises.push(cellWithSquare.linkedSquare.waitForEndTransition());
-
-    if (targetCell.isEmpty()) {
-      targetCell.setLinkSquare(cellWithSquare.linkedSquare);
-    } else {
-      targetCell.setLinkSquareForMerge(cellWithSquare.linkedSquare);
-    }
-
-    cellWithSquare.removeLinkSquare();
-  }
-}
-
-// смещение и объединение группы ячеек
-async function slideSquare(cellsGroup) {
-  const promises = [];
-
-  cellsGroup.forEach((group) => {
-    slideSquaresInGroup(group, promises);
-  });
-
-  await Promise.all(promises);
-
-  grid.cells.forEach(cell => {cell.hasSquareForMerge() && cell.mergeSquares()})
-}
-
-async function moveUp() {
-  await slideSquare(grid.cellsColumnGroup);
-}
-
-async function moveDown() {
-  await slideSquare(grid.cellsColumnGroupRevers);
-}
-
-async function moveRight() {
-  await slideSquare(grid.cellsRowGroupRevers);
-}
-
-async function moveLeft() {
-  await slideSquare(grid.cellsRowGroup);
-}
-
-function canMove(cellsGroup) {
-  return cellsGroup.some((group) => canMoveInGroup(group));
-}
-
-function canMoveUp() {
-  return canMove(grid.cellsColumnGroup);
-}
-
-function canMoveDown() {
-  return canMove(grid.cellsColumnGroupRevers);
-}
-
-function canMoveRight() {
-  return canMove(grid.cellsRowGroupRevers);
-}
-
-function canMoveLeft() {
-  return canMove(grid.cellsRowGroup);
-}
-
-// проверка возможности движения группы квадратов
-function canMoveInGroup(group) {
-  return group.some((cell, index) => {
-    if(index === 0) {
-      return false;
-    }
-
-    if (cell.isEmpty()) {
-      return false;
-    }
-
-    const targetCell = group[index - 1];
-    return targetCell.canAcceptSquare(cell.linkedSquare);
-  })
 }
