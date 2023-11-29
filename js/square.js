@@ -33,8 +33,17 @@ export class Square {
 
   // ожидание окончания перемещения квадрата
   waitForEndTransition() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.squareElement.addEventListener("transitionend", resolve, {
+        once: true,
+      });
+    });
+  }
+
+  // ожидание окончания появления квадрата
+  waitForEndAnimation() {
+    return new Promise((resolve) => {
+      this.squareElement.addEventListener("animationend", resolve, {
         once: true,
       });
     });

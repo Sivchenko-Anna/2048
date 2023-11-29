@@ -54,6 +54,12 @@ async function handleKeypress(event) {
   const newSquare = new Square(gameBoard);
   grid.getEmptyCell().setLinkSquare(newSquare);
 
+  if (!canMoveUp() && !canMoveDown() && !canMoveRight() && !canMoveLeft()) {
+    await newSquare.waitForEndAnimation();
+    alert("Try again!");
+    return;
+  }
+
   setHandleKeypressOnce();
 }
 
