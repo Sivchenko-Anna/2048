@@ -18,6 +18,10 @@ export function setHandleKeypressOnce() {
 async function handleKeypress(event) {
   switch (event.key) {
     case "ArrowUp":
+      if (!canMoveUp()) {
+        setHandleKeypressOnce();
+        return;
+      }
       await moveUp();
       break;
     case "ArrowDown":
@@ -39,35 +43,6 @@ async function handleKeypress(event) {
   grid.getEmptyCell().setLinkSquare(newSquare);
 
   setHandleKeypressOnce();
-}
-
-async function moveUp() {
-  await slideSquare(grid.cellsColumnGroup);
-}
-
-async function moveDown() {
-  await slideSquare(grid.cellsColumnGroupRevers);
-}
-
-async function moveRight() {
-  await slideSquare(grid.cellsRowGroupRevers);
-}
-
-async function moveLeft() {
-  await slideSquare(grid.cellsRowGroup);
-}
-
-// смещение и объединение группы ячеек
-async function slideSquare(cellsGroup) {
-  const promises = [];
-
-  cellsGroup.forEach((group) => {
-    slideSquaresInGroup(group, promises);
-  });
-
-  await Promise.all(promises);
-
-  grid.cells.forEach(cell => {cell.hasSquareForMerge() && cell.mergeSquares()})
 }
 
 // смещение квадратов в группе
@@ -102,3 +77,38 @@ function slideSquaresInGroup(group, promises) {
     cellWithSquare.removeLinkSquare();
   }
 }
+
+// смещение и объединение группы ячеек
+async function slideSquare(cellsGroup) {
+  const promises = [];
+
+  cellsGroup.forEach((group) => {
+    slideSquaresInGroup(group, promises);
+  });
+
+  await Promise.all(promises);
+
+  grid.cells.forEach(cell => {cell.hasSquareForMerge() && cell.mergeSquares()})
+}
+
+async function moveUp() {
+  await slideSquare(grid.cellsColumnGroup);
+}
+
+async function moveDown() {
+  await slideSquare(grid.cellsColumnGroupRevers);
+}
+
+async function moveRight() {
+  await slideSquare(grid.cellsRowGroupRevers);
+}
+
+async function moveLeft() {
+  await slideSquare(grid.cellsRowGroup);
+}
+
+
+function canMoveUp() {
+  return canMove(grid.cellsGroupedByColumn);
+}
+
