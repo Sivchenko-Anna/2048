@@ -25,12 +25,24 @@ async function handleKeypress(event) {
       await moveUp();
       break;
     case "ArrowDown":
+      if (!canMoveDown()) {
+        setHandleKeypressOnce();
+        return;
+      }
       await moveDown();
       break;
     case "ArrowRight":
+      if (!canMoveRight()) {
+        setHandleKeypressOnce();
+        return;
+      }
       await moveRight();
       break;
     case "ArrowLeft":
+      if (!canMoveLeft()) {
+        setHandleKeypressOnce();
+        return;
+      }
       await moveLeft();
       break;
 
@@ -107,15 +119,27 @@ async function moveLeft() {
   await slideSquare(grid.cellsRowGroup);
 }
 
+function canMove(cellsGroup) {
+  return cellsGroup.some((group) => canMoveInGroup(group));
+}
 
 function canMoveUp() {
   return canMove(grid.cellsColumnGroup);
 }
 
-function canMove(cellsGroup) {
-  return cellsGroup.some((group) => canMoveInGroup(group));
+function canMoveDown() {
+  return canMove(grid.cellsColumnGroupRevers);
 }
 
+function canMoveRight() {
+  return canMove(grid.cellsRowGroupRevers);
+}
+
+function canMoveLeft() {
+  return canMove(grid.cellsRowGroup);
+}
+
+// проверка возможности движения группы квадратов
 function canMoveInGroup(group) {
   return group.some((cell, index) => {
     if(index === 0) {
