@@ -15,19 +15,19 @@ export function setHandleKeypressOnce() {
 }
 
 // обработка нажатия клавиш
-function handleKeypress(event) {
+async function handleKeypress(event) {
   switch (event.key) {
     case "ArrowUp":
-      moveUp();
+      await moveUp();
       break;
     case "ArrowDown":
-      moveDown();
+      await moveDown();
       break;
     case "ArrowRight":
-      moveRight();
+      await moveRight();
       break;
     case "ArrowLeft":
-      moveLeft();
+      await moveLeft();
       break;
 
     default:
@@ -41,33 +41,37 @@ function handleKeypress(event) {
   setHandleKeypressOnce();
 }
 
-function moveUp() {
-  slideSquare(grid.cellsColumnGroup);
+async function moveUp() {
+  await slideSquare(grid.cellsColumnGroup);
 }
 
-function moveDown() {
-  slideSquare(grid.cellsColumnGroupRevers);
+async function moveDown() {
+  await slideSquare(grid.cellsColumnGroupRevers);
 }
 
-function moveRight() {
-  slideSquare(grid.cellsRowGroupRevers);
+async function moveRight() {
+  await slideSquare(grid.cellsRowGroupRevers);
 }
 
-function moveLeft() {
-  slideSquare(grid.cellsRowGroup);
+async function moveLeft() {
+  await slideSquare(grid.cellsRowGroup);
 }
 
 // смещение и объединение группы ячеек
-function slideSquare(cellsGroup) {
+async function slideSquare(cellsGroup) {
+  const promises = [];
+
   cellsGroup.forEach((group) => {
-    slideSquaresInGroup(group);
+    slideSquaresInGroup(group, promises);
   });
+
+  await Promise.all(promises);
 
   grid.cells.forEach(cell => {cell.hasSquareForMerge() && cell.mergeSquares()})
 }
 
 // смещение квадратов в группе
-function slideSquaresInGroup(group) {
+function slideSquaresInGroup(group, promises) {
   for (let i = 1; i < group.length; i++) {
     if (group[i].isEmpty()) {
       continue;
@@ -86,6 +90,8 @@ function slideSquaresInGroup(group) {
     if (!targetCell) {
       continue;
     }
+
+    promises.push(cellWithSquare.linkedSquare.waitForEndTransition());
 
     if (targetCell.isEmpty()) {
       targetCell.setLinkSquare(cellWithSquare.linkedSquare);

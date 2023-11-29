@@ -30,4 +30,13 @@ export class Square {
   removeFromDOM() {
     this.squareElement.remove();
   }
+
+  // ожидание окончания перемещения квадрата
+  waitForEndTransition() {
+    return new Promise(resolve => {
+      this.squareElement.addEventListener("transitionend", resolve, {
+        once: true,
+      });
+    });
+  }
 }
