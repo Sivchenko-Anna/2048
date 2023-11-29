@@ -109,6 +109,24 @@ async function moveLeft() {
 
 
 function canMoveUp() {
-  return canMove(grid.cellsGroupedByColumn);
+  return canMove(grid.cellsColumnGroup);
 }
 
+function canMove(cellsGroup) {
+  return cellsGroup.some((group) => canMoveInGroup(group));
+}
+
+function canMoveInGroup(group) {
+  return group.some((cell, index) => {
+    if(index === 0) {
+      return false;
+    }
+
+    if (cell.isEmpty()) {
+      return false;
+    }
+
+    const targetCell = group[index - 1];
+    return targetCell.canAcceptSquare(cell.linkedSquare);
+  })
+}
